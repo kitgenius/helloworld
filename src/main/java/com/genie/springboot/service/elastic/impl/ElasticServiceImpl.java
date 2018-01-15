@@ -14,6 +14,7 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import com.genie.springboot.service.elastic.ElasticClientFactory;
@@ -45,7 +46,7 @@ public class ElasticServiceImpl implements ElasticService {
 		RestHighLevelClient client = ElasticClientFactory.buildClient();
 		DeleteIndexResponse deleteResponse = null;
 		try {
-			deleteResponse = client.indices().deleteIndex(request, null);
+			deleteResponse = client.indices().deleteIndex(request);
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -60,7 +61,7 @@ public class ElasticServiceImpl implements ElasticService {
 		RestHighLevelClient client = ElasticClientFactory.buildClient();
 		GetResponse getResponse = null;
 		try {
-			getResponse = client.get(request, null);
+			getResponse = client.get(request);
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -75,7 +76,7 @@ public class ElasticServiceImpl implements ElasticService {
 		RestHighLevelClient client = ElasticClientFactory.buildClient();
 		DeleteResponse deleteResponse = null;
 		try {
-			deleteResponse = client.delete(request, null);
+			deleteResponse = client.delete(request);
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -91,7 +92,7 @@ public class ElasticServiceImpl implements ElasticService {
 		UpdateResponse updateResponse = null;
 		request.doc(jsonMap);
 		try {
-			updateResponse = client.update(request, null);
+			updateResponse = client.update(request);
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -17,7 +17,7 @@ public class PropertyReader {
 	}*/
 
 	public void loadProps(String propFile) {
-		//logger.info("开始加载properties文件内容.......");
+		logger.info("开始加载properties文件内容，文件路径为：" + propFile);
 		setPropertiesFile(propFile);
 		props = new Properties();
 		InputStream in = null;
@@ -67,6 +67,7 @@ public class PropertyReader {
 	}
 
 	public void setPropertiesFile(String propertiesFile) {
+		logger.info("设置properties文件路径：" + propertiesFile);
 		this.propertiesFile = propertiesFile;
 	}
 	

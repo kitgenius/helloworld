@@ -1,5 +1,0 @@
-#elasticsearch配置
-#RestHighLevelClient配置
-elastic.ip = 172.18.128.86
-elastic.port = 9200
-elastic.type = http
