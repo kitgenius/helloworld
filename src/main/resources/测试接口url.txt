@@ -1,0 +1,5 @@
+增加索引
+http://127.0.0.1:8080/elastic/testIndex?user=usertest&msg=msgtest
+
+删除索引
+http://127.0.0.1:8080/elastic/testDeleteIndex?index=genietest
