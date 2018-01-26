@@ -1,11 +1,20 @@
 package com.genie.springboot.helloworld;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,16 +26,7 @@ public class HelloworldApplication {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		
-		String pic = "F:\\temp\\123.png";
-		
-		File picFile = new File(pic);
-		HttpPost httpPost = new HttpPost("http://172.18.128.86:8080/faith_web/image/upload");// 创建httpPost 
-		
-		HttpEntity entity = 
-		httpPost.setEntity(entity);
-		
+	public static void main(String[] args) {		
 		SpringApplication.run(HelloworldApplication.class, args);
 		
 	}
