@@ -1,5 +1,7 @@
 package com.genie.springboot.service.elastic.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,18 +18,23 @@ public class ElasticServiceImplTest extends BaseTest {
 	@Autowired
 	ElasticService elasticService;
 
-	private String index = "genietest";
-	private String type = "typetest";
+	private String index = "newgenietest";
+	private String type = "newtypetest";
 
 	@Test
 	public void indextTest() {
-		for (int i = 0 + 100; i < 200; i++) {
+		for (int i = 0 + 200; i < 200; i++) {
+			Date indexTime = new Date();
 			String docId = String.valueOf(i);
 			String user = "user" + i;
 			String msg = "msg" + i;
 			Map<String, Object> jsonMap = new HashMap<>();
 			jsonMap.put("user", user);
 			jsonMap.put("msg", msg);
+			jsonMap.put("@timestamp", indexTime);
+			jsonMap.put("smartcardId", "8757000000000002");
+			jsonMap.put("regionCode", "27");
+			jsonMap.put("regionName", "罗村");
 			elasticService.index(index, type, docId, jsonMap);
 		}
 	}
