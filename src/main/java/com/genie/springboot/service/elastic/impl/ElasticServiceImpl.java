@@ -1,19 +1,26 @@
 package com.genie.springboot.service.elastic.impl;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +28,11 @@ import com.genie.springboot.service.elastic.ElasticClientFactory;
 import com.genie.springboot.service.elastic.ElasticService;
 
 @Service("elasticService")
+/**
+ * 
+ * @author Genie
+ * 实现elastic 同步接口。
+ */
 public class ElasticServiceImpl implements ElasticService {
 
 	@Override
@@ -82,7 +94,7 @@ public class ElasticServiceImpl implements ElasticService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return deleteResponse;
 	}
 
 	@Override
@@ -98,7 +110,70 @@ public class ElasticServiceImpl implements ElasticService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return updateResponse;
+		
 	}
+
+	@Override
+	public BulkResponse bulkHandle(BulkRequest bulkRequest) {
+		RestHighLevelClient client = ElasticClientFactory.buildClient();
+		BulkResponse bulkResponse = null;
+		try {
+			bulkResponse = client.bulk(bulkRequest);
+			client.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bulkResponse;
+	}
+
+	@Override
+	public SearchResponse searchAll(String index, String[] types) {
+		SearchRequest searchRequest = new SearchRequest(index);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+		searchRequest.types(types);
+		RestHighLevelClient client = ElasticClientFactory.buildClient();
+		SearchResponse searchResponse = null;
+		try {
+			searchResponse = client.search(searchRequest);
+			client.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return searchResponse;
+	}
+
+	@Override
+	public SearchResponse searchByTerm(String index, String[] types, String termKey, String teamValue) {
+		return searchByTerm(index, types, termKey, teamValue, 0, 10);
+	}
+
+	@Override
+	public SearchResponse searchByTerm(String index, String[] types, String termKey, String teamValue, int from,
+			int size) {
+		SearchRequest searchRequest = new SearchRequest(index);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(QueryBuilders.termQuery(termKey, teamValue));
+		searchSourceBuilder.from(from);
+		searchSourceBuilder.size(size);
+		searchRequest.types(types);
+		searchRequest.source(searchSourceBuilder);
+		RestHighLevelClient client = ElasticClientFactory.buildClient();
+		SearchResponse searchResponse = null;
+		try {
+			searchResponse = client.search(searchRequest);
+			client.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return searchResponse;
+	}
+	
+	
 
 }
