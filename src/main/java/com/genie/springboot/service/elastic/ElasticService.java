@@ -76,7 +76,7 @@ public interface ElasticService {
 	public SearchResponse searchAll(String index,String[] types); 
 	
 	/**
-	 * 根据字段、值匹配索引下文档
+	 * 根据字段、值匹配索引下文档，只能匹配数字与英文
 	 * @param index 索引
 	 * @param types 文档类型
 	 * @param termKey 字段名
@@ -86,7 +86,7 @@ public interface ElasticService {
 	public SearchResponse searchByTerm(String index,String[] types,String termKey,String teamValue);
 	
 	/**
-	 * 根据字段、值匹配索引下的文档，指定结果开始索引和返回条数
+	 * 根据字段、值匹配索引下的文档，只能匹配数字与英文，指定结果开始索引和返回条数
 	 * @param index 索引
 	 * @param types 文档类型
 	 * @param termKey 字段名
@@ -96,4 +96,23 @@ public interface ElasticService {
 	 * @return
 	 */
 	public SearchResponse searchByTerm(String index,String[] types,String termKey,String teamValue,int from,int size);
+	
+	/**
+	 * 根据字段、值匹配索引下的文档，模糊查询，可查询中文
+	 * fuzzy query ：主要根据fuzziniess和prefix_length进行匹配distance查询。根据type不同distance计算不一样。
+     * numeric类型的distance类似于区间，string类型则依据Levenshtein distance，即从一个stringA变换到另一个stringB，需要变换的最小字母数。
+     * 如果指定为AUTO，则根据term的length有以下规则：
+     * 0-1：完全一致
+     * 1-4：1
+     * >4：2
+     * 推荐指定prefix_length，表明这个范围的字符需要精准匹配，如果不指定prefix_lengh和fuzziniess参数，该查询负担较重。
+	 * @param index 索引
+	 * @param types 文档类型
+	 * @param termKey 字段名
+	 * @param teamValue 字段值
+	 * @param prefixLength 匹配前缀长度，需要精准匹配
+	 * @param maxExpansions 匹配扩展到的最大条数
+	 * @return
+	 */
+	public SearchResponse searchFuzzy(String index,String[] types,String termKey,String teamValue,int prefixLength,int maxExpansions);
 }

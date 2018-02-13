@@ -26,7 +26,7 @@ public class ElasticServiceImplTest extends BaseTest {
 
 	@Test
 	public void indextTest() {
-		for (int i = 0 + 250 ; i < 300; i++) {
+		for (int i = 300 ; i < 350; i++) {
 			Date indexTime = new Date();
 			String docId = String.valueOf(i);
 			String user = "user" + i;
@@ -41,6 +41,27 @@ public class ElasticServiceImplTest extends BaseTest {
 			jsonMap.put("url", "testurl");
 			jsonMap.put("url_map", "人才市场首页");
 			elasticService.index(index, type, docId, jsonMap);
+		}
+	}
+	
+	@Test
+	public void indexTest2(){
+		String index2 = "newgenietest2";
+		String type2 = "newtypetest2";
+		for (int i = 0 ; i < 100; i++) {
+			Date indexTime = new Date();
+			String user = "user" + i;
+			String msg = "msg" + i;
+			Map<String, Object> jsonMap = new HashMap<>();
+			jsonMap.put("user", user);
+			jsonMap.put("msg", msg);
+			jsonMap.put("@timestamp", indexTime);
+			jsonMap.put("smartcardId", "8757000000000007");
+			jsonMap.put("regionCode", "1602");
+			jsonMap.put("regionName", "南庄");
+			jsonMap.put("url", "testurl");
+			jsonMap.put("url_map", "人才市场首页");
+			elasticService.index(index2, type2, null, jsonMap);
 		}
 	}
 
@@ -84,8 +105,10 @@ public class ElasticServiceImplTest extends BaseTest {
 	
 	@Test
 	public void searchAllTest(){
-		String[] types = {type};
-		SearchResponse searchResponse = elasticService.searchAll(index, types);
+		String index2 = "newgenietest2";
+		String type2 = "newtypetest2";
+		String[] types = {type2};
+		SearchResponse searchResponse = elasticService.searchAll(index2, types);
 		System.out.println("searchResponse is : " + searchResponse);
 	}
 	
@@ -95,5 +118,12 @@ public class ElasticServiceImplTest extends BaseTest {
 		SearchResponse searchResponse = elasticService.searchByTerm(index, types, "regionName", "桂城");
 		System.out.println("searchResponse is : " + searchResponse);
 		System.out.println("totalhits : " + searchResponse.getHits().getTotalHits());
+	}
+	
+	@Test
+	public void searchFuzzyTest(){
+		String[] types = {type};
+		SearchResponse searchResponse = elasticService.searchFuzzy(index, types, "regionName", "南庄", 2, 4);
+		System.out.println("searchResponse is : " + searchResponse);
 	}
 }

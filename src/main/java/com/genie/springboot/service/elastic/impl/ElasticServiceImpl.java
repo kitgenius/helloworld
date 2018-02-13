@@ -19,6 +19,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.context.annotation.ComponentScan;
@@ -37,7 +39,12 @@ public class ElasticServiceImpl implements ElasticService {
 
 	@Override
 	public IndexResponse index(String index, String type, String documentId, Map<String, Object> jsonMap) {
-		IndexRequest request = new IndexRequest(index,type,documentId);//建立索引的请求
+		IndexRequest request = null;//建立索引的请求
+		if(documentId == null){//无文档id则由elastic自动生成id
+			request = new IndexRequest(index,type);
+		}else{
+			request = new IndexRequest(index,type,documentId);
+		}
 		request.source(jsonMap);//文档源
 		request.timeout("2s");//设置2秒超时
 		RestHighLevelClient client = ElasticClientFactory.buildClient();
@@ -167,6 +174,29 @@ public class ElasticServiceImpl implements ElasticService {
 		try {
 			searchResponse = client.search(searchRequest);
 			client.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return searchResponse;
+	}
+
+	@Override
+	public SearchResponse searchFuzzy(String index, String[] types, String termKey, String teamValue, int prefixLength,
+			int maxExpansions) {
+		SearchRequest searchRequest = new SearchRequest(index);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		MatchQueryBuilder queryBuilder = new MatchQueryBuilder(termKey, teamValue);
+		queryBuilder.fuzziness(Fuzziness.AUTO);
+		queryBuilder.prefixLength(prefixLength);
+		queryBuilder.maxExpansions(maxExpansions);
+		searchSourceBuilder.query(queryBuilder);
+		searchRequest.types(types);
+		searchRequest.source(searchSourceBuilder);
+		RestHighLevelClient client = ElasticClientFactory.buildClient();
+		SearchResponse searchResponse = null;
+		try {
+			searchResponse = client.search(searchRequest);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
