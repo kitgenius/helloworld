@@ -47,7 +47,9 @@ public class PDFtoImageTest {
                 ImageOutputStream imageOutput = ImageIO.createImageOutputStream(os);
                 ImageIO.write(image, "PNG", imageOutput);
                 InputStream is = new ByteArrayInputStream(os.toByteArray());
-                multiEntity.addBinaryBody("file", is);
+                multiEntity.addBinaryBody("file", is , ContentType.DEFAULT_BINARY ,outputFileName);
+                os.close();
+                is.close();
             }
             multiEntity.addTextBody("type", "0",ContentType.TEXT_PLAIN.withCharset("UTF-8"));
             httpPost.setEntity(multiEntity.build());
