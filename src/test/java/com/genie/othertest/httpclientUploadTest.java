@@ -27,7 +27,7 @@ public class httpclientUploadTest {
 		//上传文件，传参数名、文件
 		entityBuilder.addBinaryBody("file", picFile);
 		//参数
-		entityBuilder.addTextBody("type", "0",ContentType.TEXT_PLAIN.withCharset("UTF-8"));
+		entityBuilder.addTextBody("type", "1",ContentType.TEXT_PLAIN.withCharset("UTF-8"));
 		httpPost.setEntity(entityBuilder.build());
 		
 		
