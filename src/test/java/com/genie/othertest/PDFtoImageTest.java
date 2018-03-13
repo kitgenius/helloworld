@@ -36,7 +36,7 @@ import org.junit.Test;
 public class PDFtoImageTest {
 	@Test
 	public void myTest(){
-		File file = new File("F:\\temp\\pdfbox\\2017政府工作报告.pdf");  
+		File file = new File("F:\\temp\\pdfbox\\bigtest.pdf");  
 		HttpPost httpPost = new HttpPost("http://172.18.128.86:8080/faith_web/image/upload");
 		MultipartEntityBuilder multiEntity = MultipartEntityBuilder.create().setMode(HttpMultipartMode.RFC6532);//设置正确模式，否则中文会出现乱码
 		//multiEntity.setCharset(Charset.forName("UTF-8"));
@@ -46,7 +46,7 @@ public class PDFtoImageTest {
             int pageCount = doc.getNumberOfPages();
             //List<String> imageList = new ArrayList<String>();
             for (int i = 0; i < pageCount; i++) {
-            	String outputFileName = "2017政府工作报告（白坭）_" + i +".png";
+            	String outputFileName = "bigtest_" + i +".png";
             	//imageList.add(outputFileName);
                 // 方式1,第二个参数是设置缩放比(即像素)，这里设置72dpi
                 //BufferedImage image = resize(renderer.renderImageWithDPI(i, 96),0,842);//压缩图片尺寸，相对于直接设置dpi，压缩后效果要差
