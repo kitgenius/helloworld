@@ -1,7 +1,15 @@
 package com.genie.othertest;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -57,6 +65,22 @@ public class HtmlToImageTest {
 	
 	@Test
 	public void mytest2(){
-		
-	}
+		JFrame window = new JFrame();  
+        HtmlPanel panel = new HtmlPanel();  
+        window.getContentPane().add(panel);  
+        window.setSize(600, 400);  
+        window.setVisible(true);  
+        new SimpleHtmlRendererContext(panel, new SimpleUserAgentContext())  
+                .navigate("http://www.hefeipet.com/client/chongwuzhishi/shenghuozatan/2012/0220/95.html");  
+  
+        BufferedImage image = new BufferedImage(panel.getWidth(),  
+                panel.getHeight(), BufferedImage.TYPE_INT_ARGB);  
+  
+        // paint the editor onto the image  
+        SwingUtilities.paintComponent(image.createGraphics(), panel,  
+                new JPanel(), 0, 0, image.getWidth(), image.getHeight());  
+        // save the image to file  
+        ImageIO.write((RenderedImage) image, "png", new File("html.png"));  
+    } 
+	
 }
